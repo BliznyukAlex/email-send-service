@@ -10,7 +10,7 @@ import java.util.Properties;
 
 @Slf4j
 @NoArgsConstructor
-public  abstract class MailClient{
+public abstract class MailClient {
 
     protected AppData appData = ApplicationContextProvider.getApplicationContext().getBean(AppData.class);
 
@@ -26,7 +26,7 @@ public  abstract class MailClient{
 
     public abstract JavaMailSenderImpl getJavaMailSender();
 
-    protected JavaMailSenderImpl createJavaMailSender(){
+    protected JavaMailSenderImpl createJavaMailSender() {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         mailSender.setUsername(user);
         mailSender.setPassword(password);

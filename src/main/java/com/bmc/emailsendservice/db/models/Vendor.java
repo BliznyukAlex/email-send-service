@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 @Table(name = "bmc_vendor")

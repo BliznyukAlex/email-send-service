@@ -10,7 +10,6 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 public class SendEmailRequest {
-//    @NotBlank
     private Integer employeeId;
     private String customerEmail;
     private String emailText;

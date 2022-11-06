@@ -2,7 +2,7 @@ package com.bmc.emailsendservice.mailClients;
 
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
-public class GmailClient extends MailClient{
+public class GmailClient extends MailClient {
 
     public GmailClient(String user, String password) {
         super(user, password);

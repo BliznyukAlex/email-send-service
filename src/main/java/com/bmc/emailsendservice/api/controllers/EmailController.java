@@ -20,11 +20,11 @@ public class EmailController {
     private AppData appData;
 
     @PostMapping("/api/v1/sendEmail")
-    public ApiResponse sendEmail(@RequestBody SendEmailRequest sendEmailRequest)  {
+    public ApiResponse sendEmail(@RequestBody SendEmailRequest sendEmailRequest) {
         Future<ApiResponse> apiResponseFuture = appData.getExecutorService().submit(new SendMailTask(sendEmailRequest));
         try {
             return apiResponseFuture.get();
-        } catch (Exception exc){
+        } catch (Exception exc) {
             log.error(String.format("EXCEPTION: %s : %s", exc.getMessage(), Arrays.toString(exc.getStackTrace())));
             return new ApiResponse("error");
         }

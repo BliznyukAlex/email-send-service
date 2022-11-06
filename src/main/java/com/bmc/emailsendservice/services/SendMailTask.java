@@ -61,14 +61,13 @@ public class SendMailTask implements Callable {
     }
 
     private void sendMail(JavaMailSenderImpl javaMailSender, EmailDto emailDto) throws MessagingException {
-            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
-            helper.setFrom(emailDto.getFrom());
-            helper.setTo(emailDto.getTo());
-            helper.setSubject(emailDto.getSubject());
-            helper.setText(emailDto.getBody());
-            javaMailSender.send(mimeMessage);
-
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
+        helper.setFrom(emailDto.getFrom());
+        helper.setTo(emailDto.getTo());
+        helper.setSubject(emailDto.getSubject());
+        helper.setText(emailDto.getBody());
+        javaMailSender.send(mimeMessage);
     }
 
     private Vendor getEmailVendor(String email) {

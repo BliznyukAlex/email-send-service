@@ -6,6 +6,5 @@ import com.bmc.emailsendservice.db.models.Vendor;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface EmployeeEmailRepository extends JpaRepository<EmployeeEmail, Integer> {
-//    EmployeeEmail findByEmployeeIdAndVendorId(Integer employeeId, Integer vendorId);
     EmployeeEmail findByEmployeeAndVendor(Employee employee, Vendor vendor);
 }

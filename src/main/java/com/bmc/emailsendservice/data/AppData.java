@@ -44,7 +44,7 @@ public class AppData {
     @Getter
     ExecutorService executorService = Executors.newFixedThreadPool(8);
 
-    public void loadData(){
+    public void loadData() {
         vendorClassMap = new HashMap<>();
         vendorClassMap.put(GMAIL, GmailClient.class);
         vendorClassMap.put(WALLA, WallaClient.class);
