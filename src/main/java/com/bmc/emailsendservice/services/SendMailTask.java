@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 
+import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.util.Arrays;
 import java.util.concurrent.Callable;
@@ -59,8 +60,7 @@ public class SendMailTask implements Callable {
         return new ApiResponse();
     }
 
-    private void sendMail(JavaMailSenderImpl javaMailSender, EmailDto emailDto) {
-        try {
+    private void sendMail(JavaMailSenderImpl javaMailSender, EmailDto emailDto) throws MessagingException {
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
             helper.setFrom(emailDto.getFrom());
@@ -68,9 +68,7 @@ public class SendMailTask implements Callable {
             helper.setSubject(emailDto.getSubject());
             helper.setText(emailDto.getBody());
             javaMailSender.send(mimeMessage);
-        } catch (Exception exc) {
-            log.error(String.format("EXCEPTION: %s : %s", exc.getMessage(), Arrays.toString(exc.getStackTrace())));
-        }
+
     }
 
     private Vendor getEmailVendor(String email) {
