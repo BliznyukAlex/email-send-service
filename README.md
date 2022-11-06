@@ -28,7 +28,7 @@ DB locates on remote server so you don't need to configure it
 
 ## Request examples
 
-    POST /registration
+    POST /api/v1/sendEmail
     Accept: application/json
     Content-Type: application/json
     {
