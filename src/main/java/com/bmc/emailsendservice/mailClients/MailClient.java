@@ -1,4 +1,4 @@
-package com.bmc.emailsendservice.mailClient;
+package com.bmc.emailsendservice.mailClients;
 
 import com.bmc.emailsendservice.config.ApplicationContextProvider;
 import com.bmc.emailsendservice.data.AppData;

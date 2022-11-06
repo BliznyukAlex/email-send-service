@@ -22,8 +22,10 @@ public class EmployeeEmail {
     private String email;
     @Column(name = "password")
     private String password;
-    @Column(name = "vendorId")
-    private Integer vendorId;
-    @Column(name = "employee_id")
-    private Integer employeeId;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "vendorId", referencedColumnName = "id", nullable = false)
+    private Vendor vendor;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "employeeId", referencedColumnName = "id", nullable = false)
+    private Employee employee;
 }

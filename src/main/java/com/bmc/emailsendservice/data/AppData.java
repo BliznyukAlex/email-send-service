@@ -1,8 +1,8 @@
 package com.bmc.emailsendservice.data;
 
-import com.bmc.emailsendservice.mailClient.GmailClient;
-import com.bmc.emailsendservice.mailClient.WallaClient;
-import com.bmc.emailsendservice.mailClient.YahooClient;
+import com.bmc.emailsendservice.mailClients.GmailClient;
+import com.bmc.emailsendservice.mailClients.WallaClient;
+import com.bmc.emailsendservice.mailClients.YahooClient;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;

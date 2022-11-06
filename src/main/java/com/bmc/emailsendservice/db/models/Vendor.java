@@ -21,6 +21,4 @@ public class Vendor {
     private Integer id;
     @Column(name = "name")
     private String name;
-//    @OneToMany(fetch = FetchType.LAZY, mappedBy = "vendor")
-//    private List<EmployeeEmail> emailList;
 }

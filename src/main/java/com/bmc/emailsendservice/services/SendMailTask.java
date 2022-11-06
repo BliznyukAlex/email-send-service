@@ -1,9 +1,9 @@
-package com.bmc.emailsendservice.services.impl;
+package com.bmc.emailsendservice.services;
 
 import com.bmc.emailsendservice.api.models.ApiResponse;
 import com.bmc.emailsendservice.api.models.SendEmailRequest;
 import com.bmc.emailsendservice.config.ApplicationContextProvider;
-import com.bmc.emailsendservice.mailClient.MailClient;
+import com.bmc.emailsendservice.mailClients.MailClient;
 import com.bmc.emailsendservice.data.AppData;
 import com.bmc.emailsendservice.data.models.EmailDto;
 import com.bmc.emailsendservice.db.models.Employee;
@@ -21,28 +21,26 @@ import java.util.Arrays;
 import java.util.concurrent.Callable;
 
 @Slf4j
-public class SendEmailServiceImpl implements Callable {
+public class SendMailTask implements Callable {
 
-    protected AppData appData = ApplicationContextProvider.getApplicationContext().getBean(AppData.class);
-    protected VendorRepository vendorRepository = ApplicationContextProvider.getApplicationContext().getBean(VendorRepository.class);
-    protected EmployeeRepository employeeRepository = ApplicationContextProvider.getApplicationContext().getBean(EmployeeRepository.class);
-    protected EmployeeEmailRepository employeeEmailRepository = ApplicationContextProvider.getApplicationContext().getBean(EmployeeEmailRepository.class);
+    private final AppData appData = ApplicationContextProvider.getApplicationContext().getBean(AppData.class);
+    private final VendorRepository vendorRepository = ApplicationContextProvider.getApplicationContext().getBean(VendorRepository.class);
+    private final EmployeeRepository employeeRepository = ApplicationContextProvider.getApplicationContext().getBean(EmployeeRepository.class);
+    private final EmployeeEmailRepository employeeEmailRepository = ApplicationContextProvider.getApplicationContext().getBean(EmployeeEmailRepository.class);
 
     private final SendEmailRequest sendEmailRequest;
 
-    public SendEmailServiceImpl(SendEmailRequest sendEmailRequest) {
+    public SendMailTask(SendEmailRequest sendEmailRequest) {
         this.sendEmailRequest = sendEmailRequest;
     }
 
     public ApiResponse sendEmailToCustomer() {
-        long start = System.currentTimeMillis();
         log.info("Sending email to customer: " + sendEmailRequest.getCustomerEmail() + " with text: " + sendEmailRequest.getEmailText());
         Vendor vendor = getEmailVendor(sendEmailRequest.getCustomerEmail());
-        log.info("vendorId: " + vendor);
         Employee employee = employeeRepository.findById(sendEmailRequest.getEmployeeId()).orElse(null);
         EmployeeEmail employeeEmail = null;
         if (employee != null && vendor != null) {
-            employeeEmail = employeeEmailRepository.findByEmployeeIdAndVendorId(employee.getId(), vendor.getId());
+            employeeEmail = employeeEmailRepository.findByEmployeeAndVendor(employee, vendor);
         }
         if (employeeEmail != null && employeeEmail.getEmail() != null && appData.getVendorClassMap().containsKey(vendor.getName())) {
             try {
@@ -53,19 +51,18 @@ public class SendEmailServiceImpl implements Callable {
                 log.info(String.format("Email sent to from employee: %s to customer: %s with subject: %s", emailDto.getFrom(), emailDto.getTo(), emailDto.getSubject()));
             } catch (Exception exc) {
                 log.error(String.format("EXCEPTION: %s : %s", exc.getMessage(), Arrays.toString(exc.getStackTrace())));
+                return new ApiResponse(String.format("error: message wasn't send: %s", sendEmailRequest));
             }
         } else {
             return new ApiResponse(String.format("error: message wasn't send: %s", sendEmailRequest));
         }
-        log.info("execution: " + (System.currentTimeMillis() - start));
         return new ApiResponse();
     }
 
     private void sendMail(JavaMailSenderImpl javaMailSender, EmailDto emailDto) {
-        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-        MimeMessageHelper helper =
-                new MimeMessageHelper(mimeMessage, "utf-8");
         try {
+            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
             helper.setFrom(emailDto.getFrom());
             helper.setTo(emailDto.getTo());
             helper.setSubject(emailDto.getSubject());
@@ -83,7 +80,6 @@ public class SendEmailServiceImpl implements Callable {
         } catch (Exception exc) {
             log.error(String.format("EXCEPTION: %s : %s", exc.getMessage(), Arrays.toString(exc.getStackTrace())));
         }
-
         return vendorRepository.findByName(vendor);
     }
 
